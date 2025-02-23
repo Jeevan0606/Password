@@ -12,4 +12,4 @@ def authenticate_user(username: str, password: str):
         print("Login successful!")
     else:
         print("Invalid username or password!")
-authenticate_user("Jeevan", "1234")  # Should print "Login successful!"
+authenticate_user("Jeevan", "1234")
