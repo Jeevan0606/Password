@@ -1,17 +1,24 @@
 const bcrypt = require("bcrypt");
 const fs = require("fs");
 const usersDB = "users.json";
-function login(username, password) {
-    if (!fs.existsSync(usersDB)) {
-        console.log("No users found. Please register first.");
+
+function register(username, password) {
+    let users = [];
+
+    if (fs.existsSync(usersDB)) {
+        users = JSON.parse(fs.readFileSync(usersDB));
+    }
+
+    if (users.some(u => u.username === username)) {
+        console.log("Username already exists. Choose a different one.");
         return;
     }
-    const users = JSON.parse(fs.readFileSync(usersDB));
-    const user = users.find(u => u.username === username);
-    if (!user || !bcrypt.compareSync(password, user.password)) {
-        console.log("Invalid username or password!");
-    } else {
-        console.log("Login successful!");
-    }
+
+    const hashedPassword = bcrypt.hashSync(password, 10);
+    users.push({ username, password: hashedPassword });
+    fs.writeFileSync(usersDB, JSON.stringify(users, null, 2));
+
+    console.log("User registered successfully!");
 }
-login("Jeevan", "secure");
+
+register("Jeevan", "Secure");
